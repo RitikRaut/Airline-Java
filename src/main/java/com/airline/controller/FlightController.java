@@ -8,7 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-
+@CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @RequestMapping("/flight")
 public class FlightController {
@@ -44,10 +44,12 @@ public class FlightController {
     }
 
     //To update flight
-    @PutMapping("/")
-    public ResponseEntity<Flight> updateFlight(@RequestBody Flight flight){
-        Flight flight1 = flightService.updateFlight(flight);
-        return new ResponseEntity<Flight>(flight1,HttpStatus.OK);
+    //To update flight
+    @PutMapping("/{flightId}")
+    public ResponseEntity<Flight> updateFlight(@PathVariable("flightId") int flightId, @RequestBody Flight flight){
+        Flight updatedFlight = flightService.updateFlight(flightId, flight);
+        return new ResponseEntity<>(updatedFlight, HttpStatus.OK);
     }
+
 
 }

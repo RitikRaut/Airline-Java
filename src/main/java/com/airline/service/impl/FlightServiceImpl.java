@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class FlightServiceImpl implements FlightService {
@@ -26,19 +27,23 @@ public class FlightServiceImpl implements FlightService {
 
     @Override
     public Flight getFlight(int flightId) throws Exception {
-       Flight flight = flightRepository.findById(flightId).orElseThrow(()->new Exception("No Flight with Id: "+flightId));
-        return flight;
+        Optional<Flight> optionalFlight = flightRepository.findById(flightId);
+
+        if (optionalFlight.isPresent()) {
+            return optionalFlight.get();
+        } else {
+            throw new Exception("Flight not found with ID: " + flightId);
+        }
     }
 
     @Override
-    public boolean deleteFlight(int flightId) {
+    public void deleteFlight(int flightId) {
         flightRepository.deleteById(flightId);
-        return true;
     }
 
     @Override
-    public Flight updateFlight(Flight flight) {
-//        Flight flight = flightRepository.findById(flightId).orElseThrow(()->new Exception("No Flight with Id: "+flightId));
+    public Flight updateFlight(int flightId, Flight flight) {
+        flight.setFlightId(flightId);
         return flightRepository.save(flight);
     }
 }
